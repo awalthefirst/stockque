@@ -1,14 +1,18 @@
 
 body {
-  padding: 50px;
+  padding: 5%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+#container{
+  min-width:400px;
+  min-height:400px;
+}
 .inpu{
   width:100px;
   padding: 2px 5px;
 }
-.butt{
+button, .butt{
     padding: 5px 35px;
     border: none;
     margin: 20px 0;

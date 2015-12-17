@@ -4,6 +4,20 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.inpu{
+  width:100px;
+  padding: 2px 5px;
+}
+.butt{
+    padding: 5px 35px;
+    border: none;
+    margin: 20px 0;
+    margin-right:5px;
+}
+
+.floatr{
+  float:right;
+}
+.floatl{
+  float:left;
 }

@@ -5,19 +5,25 @@
 
     /* var url = "https://www.quandl.com/api/v3/datasets/WIKI/AAPL.json?order=asc&exclude_column_names=true&api_key=gewBYDX5gmvKK8TXbpLg&start_date=2015-01-01&end_date=2015-12-10&limit=n";*/
 
-    $('button').click(function () {
-        names  = ['MSFT', 'AAPL' ]; 
-        reloadChart();
-        console.log();
+    $('.add').click(function () {
+        var query = $("input").val()
+        $("input").val('')
+
+
+        if (names.indexOf(query.toUpperCase()) === -1) {
+            names = ['MSFT', 'AAPL'];
+            reloadChart();
+        }
+
     })
-    
+
     var seriesOptions = [],
         seriesCounter = 0,
         names = ['MSFT', 'AAPL', 'MMM', "GOOGl"];
 
     function createChart() {
 
-       $('#container').highcharts('StockChart', {
+        $('#container').highcharts('StockChart', {
             rangeSelector: {
                 selected: 4,
                 inputEnabled: false,
@@ -46,7 +52,7 @@
                     enabled: false
                 }
             },
-           yAxis: {
+            yAxis: {
                 labels: {
                     formatter: function () {
                         return (this.value > 0 ? ' + ' : '') + this.value;
@@ -68,9 +74,9 @@
 
         });
     }
-       
+
     function reloadChart() {
-         
+
         $.each(names, function (i, name) {
             $.getJSON(head + name + tail, function (data) {
 
@@ -92,12 +98,12 @@
                 }
             });
         })
-        
+
     };
-    
-   reloadChart();
-     
-     
+
+    reloadChart();
+
+
     /*var socket = io.connect();
 
     socket.emit('added', {

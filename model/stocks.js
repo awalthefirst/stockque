@@ -14,31 +14,20 @@ var stockSchema = new Schema({
 var obj = {
   Stock: mongoose.model('stocks', stockSchema),
   newStock: newStock,
-  getStock: getStock,
   rmStock: rmStock
 };
 
 
-function getStock(query, cb) {
-  obj.Stock.aggregate({
-      $group: {
-        _id:"$name" 
-      }
-  });
-  
-}
-
-
-function rmStock(query, cb) {
-  obj.Stock.findOneRemove({
-    name: query.name
+function rmStock(stock, cb) {
+  obj.Stock.findOneAndRemove({
+    name: stock
   }, cb);
 }
 
-function newStock(query, cb) {
+function newStock(stock, cb) {
 
   var stock = new obj.Stock({
-    name: query.name
+    name: stock
   })
   stock.save(cb);
 }

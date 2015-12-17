@@ -95,14 +95,30 @@ function onListening() {
 
 /*socket io*/
 io.on("connection",function (socket) {
-  
+
   socket.on('added',function(data){
-     socket.broadcast.emit('add', data.stock);
+     var stock = data.stock.toUpperCase();
+      // add stock to db
+      
+      db.newStock(stock,function(err,data){
+        if(!err){
+          io.sockets.emit('reload', data.name);
+        }
+      })
+      
   });
 
    socket.on('removed',function(data){
-    socket.broadcast.emit('remove', data.stock);
-  });
+     var stock = data.stock.toUpperCase();
+     //remove stock from db
+  
+      db.rmStock(stock,function(err,data){
+        if(!err){
+          io.sockets.emit('reload', data.name);
+        }
+      })
+      
+    });
     
 });
 

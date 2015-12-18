@@ -1,27 +1,41 @@
 (function () {
-    var socket = io.connect()
-    var head = "https://www.quandl.com/api/v3/datasets/WIKI/";
-    var tail = ".json?order=asc&exclude_column_names=true&api_key=gewBYDX5gmvKK8TXbpLg&start_date=2015-01-01&end_date=2015-12-10&limit=n"
-
-    var names;
-
+    var socket = io.connect(),
+        names,
+        d = new Date(),
+        day = d.getDate(),
+        month = d.getMonth() + 1,
+        year = d.getFullYear(),
+        end_date = year + '-' + month + '-' + day,
+        start_date = (year - 1) + '-' + month + '-' + day,
+        newStart_date = year + '-' + month + '-' +(day-2),
+        head = "https://www.quandl.com/api/v3/datasets/WIKI/",
+        tail = ".json?order=asc&exclude_column_names=true&api_key=gewBYDX5gmvKK8TXbpLg&start_date=" + start_date + "&end_date=" + end_date + "&limit=n",
+        newtail = ".json?order=asc&exclude_column_names=true&api_key=gewBYDX5gmvKK8TXbpLg&start_date=" + newStart_date + "&end_date=" + end_date + "&limit=n";
+        
     //add data
-    $('.add').click(function () {
+    $('.add').click(addHandler)
+    $('input').keyup(function (e) {
+        if (e.keyCode == 13) {
+            addHandler()
+        }
+    })
+
+    function addHandler() {
         var query = $("input").val()
         $("input").val('');
 
         if (query.length > 1 && names.indexOf(query.toUpperCase()) === -1) {
-            $.getJSON(head + query + tail).done(function () {
+            $.getJSON(head + query + newtail).done(function () {
                 //call socket io
                 socket.emit('added', {
                     stock: query.toUpperCase()
                 });
             })
         }
-    })
+    }
 
     //remove data
-    $('.floatr').on('click','button',function () {
+    $('.floatr').on('click', 'button', function () {
         socket.emit('removed', {
             stock: this.id
         });
@@ -89,13 +103,16 @@
     function reloadChart() {
         $.getJSON('/api').done(function (data) {
             names = data;
-             $('.floatr').html('');
+            $('.floatr').html('');
+            if (data.length === 0) {
+                createChart();
+            }
             $.each(names, function (i, name) {
                 $.getJSON(head + name + tail, function (data) {
 
                     //create remove element
-                    $('.floatr').append( $('<button>').text(name + ' (remove)')
-                    .addClass('remove').attr("id",name) )
+                    $('.floatr').append($('<button>').text(name + ' (remove)')
+                        .addClass('remove').attr("id", name))
 
                     var arr = []
                     data.dataset.data.forEach(function (e) {
@@ -120,10 +137,7 @@
     reloadChart();;
 
     socket.on('reload', function (data) {
-        console.log('reload fired')
         reloadChart();
     });
-
-
 
 })();
